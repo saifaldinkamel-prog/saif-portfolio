@@ -1,26 +1,92 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/**
+ * Maps styles/tokens.css into Tailwind's theme namespace so components
+ * get real utilities (bg-stage-void, text-signal, font-display,
+ * rounded-md, ease-in-motion, ...) instead of ad-hoc arbitrary values.
+ * The CSS variables in tokens.css remain the single source of truth;
+ * this block only re-exposes them under the names Tailwind expects.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Color */
+  --color-stage-void: var(--stage-void);
+  --color-stage-deep: var(--stage-deep);
+  --color-stage-screen: var(--stage-screen);
+  --color-stage-panel: var(--stage-panel);
+  --color-stage-raised: var(--stage-raised);
+  --color-border-hairline: var(--border-hairline);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-mono: var(--text-mono);
+
+  --color-signal: var(--signal);
+  --color-signal-text: var(--signal-text);
+  --color-signal-wash: var(--signal-wash);
+  --color-signal-border: var(--signal-border);
+  --color-on-signal: var(--on-signal);
+
+  --color-cool-glow: var(--cool-glow);
+
+  --color-viz-mint: var(--viz-mint);
+  --color-viz-sky: var(--viz-sky);
+  --color-viz-violet: var(--viz-violet);
+  --color-viz-amber: var(--viz-amber);
+  --color-viz-rose: var(--viz-rose);
+
+  /* Typography — font families (font-display / font-sans / font-mono) */
+  --font-display: var(--font-family-display);
+  --font-sans: var(--font-family-body);
+  --font-mono: var(--font-family-mono);
+
+  /* Typography — named scale (text-display, text-body-xl, ...) */
+  --text-display: var(--text-display-size);
+  --text-display--line-height: var(--text-display-leading);
+  --text-display--letter-spacing: var(--text-display-tracking);
+
+  --text-body-xl: var(--text-body-xl-size);
+  --text-body-xl--line-height: var(--text-body-xl-leading);
+  --text-body-xl--letter-spacing: var(--text-body-xl-tracking);
+
+  --text-body-lead: var(--text-body-lead-size);
+  --text-body-lead--line-height: var(--text-body-lead-leading);
+  --text-body-lead--letter-spacing: var(--text-body-lead-tracking);
+
+  --text-body: var(--text-body-size);
+  --text-body--line-height: var(--text-body-leading);
+  --text-body--letter-spacing: var(--text-body-tracking);
+
+  --text-small: var(--text-small-size);
+  --text-small--line-height: var(--text-small-leading);
+  --text-small--letter-spacing: var(--text-small-tracking);
+
+  --text-mono-label: var(--text-mono-label-size);
+  --text-mono-label--line-height: var(--text-mono-label-leading);
+  --text-mono-label--letter-spacing: var(--text-mono-label-tracking);
+
+  /* Radius — xs through full, per the approved system boards */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* Motion — easing curves (ease-in-motion / ease-out-motion) */
+  --ease-in-motion: var(--ease-in-motion);
+  --ease-out-motion: var(--ease-out-motion);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--stage-void);
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+}
+
+::selection {
+  background: var(--signal-wash);
+  color: var(--signal-text);
 }

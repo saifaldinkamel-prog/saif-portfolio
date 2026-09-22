@@ -1,0 +1,101 @@
+/**
+ * Design tokens — the single source of truth for color, type, spacing,
+ * radius, and motion. Components consume these via Tailwind utilities
+ * (mapped in app/globals.css) or `var(--token-name)` — never raw
+ * hex/px/ms literals.
+ *
+ * Spacing and radius follow Tailwind's default 4px-based scale
+ * (space-1 = 4px ... space-24 = 96px), so no custom spacing tokens are
+ * declared here — see app/globals.css for the radius scale mapping.
+ */
+
+:root {
+  /* ---------------------------------------------------------------- */
+  /* Color — stage surfaces                                           */
+  /* ---------------------------------------------------------------- */
+  --stage-void: #06070a; /* page background */
+  --stage-deep: #0a0c10; /* device frames, deepest panels */
+  --stage-screen: #0d1015; /* phone screen background */
+  --stage-panel: #12151a; /* playground cards, inline panels */
+  --stage-raised: #1a1f26; /* hover/raised states */
+  --border-hairline: rgba(255, 255, 255, 0.08); /* structural dividers */
+
+  /* Color — text */
+  --text-primary: #f2f4f7;
+  --text-secondary: #a7afba;
+  --text-tertiary: #8b94a0;
+  --text-mono: #6f7883; /* mono labels only, never body copy */
+
+  /* Color — signal (the one accent, ~3% of any screen) */
+  --signal: #3dd68c;
+  --signal-text: #74e9b4;
+  --signal-wash: rgba(61, 214, 140, 0.1);
+  --signal-border: rgba(61, 214, 140, 0.3);
+  --on-signal: #04150c;
+
+  /* Color — counter-glow (PocketBalance phone only) */
+  --cool-glow: #5748dc;
+
+  /* Color — data-viz palette (PocketBalance charts only) */
+  --viz-mint: #3dd68c;
+  --viz-sky: #5eb1ef;
+  --viz-violet: #9b8afb;
+  --viz-amber: #f5b83d;
+  --viz-rose: #e879a6;
+
+  /* ---------------------------------------------------------------- */
+  /* Typography — families (bound to next/font variables in layout.tsx)*/
+  /* ---------------------------------------------------------------- */
+  --font-family-display: var(--font-bricolage), sans-serif; /* headlines only */
+  --font-family-body: var(--font-geist-sans), sans-serif; /* body/UI */
+  --font-family-mono: var(--font-geist-mono), monospace; /* labels, figures */
+
+  /* Typography — scale (size / line-height / tracking per named style) */
+  --text-display-size: clamp(3rem, 2rem + 6vw, 7.375rem); /* up to 118px */
+  --text-display-leading: 1.04;
+  --text-display-tracking: -0.045em;
+
+  --text-body-xl-size: clamp(2.375rem, 1.6rem + 3vw, 3.875rem); /* 38-62px */
+  --text-body-xl-leading: 1.05;
+  --text-body-xl-tracking: -0.035em;
+
+  --text-body-lead-size: 1.375rem; /* 22px */
+  --text-body-lead-leading: 2.125rem; /* 34px */
+  --text-body-lead-tracking: 0em;
+
+  --text-body-size: 1.0625rem; /* 17px */
+  --text-body-leading: 1.875rem; /* 30px */
+  --text-body-tracking: 0em;
+
+  --text-small-size: 0.875rem; /* 14px */
+  --text-small-leading: 1.375rem; /* 22px */
+  --text-small-tracking: 0em;
+
+  --text-mono-label-size: 0.75rem; /* 12px */
+  --text-mono-label-leading: 1.0625rem; /* 17px */
+  --text-mono-label-tracking: 0.17em;
+
+  /* ---------------------------------------------------------------- */
+  /* Motion — CSS-consumable durations & easings                      */
+  /* Motion(JS)-side mirrors of these live in                         */
+  /* components/shared/motion.ts, since Motion's transition API takes */
+  /* seconds/arrays/spring configs, not CSS strings.                  */
+  /* ---------------------------------------------------------------- */
+  --dur-instant: 80ms; /* press, toggle */
+  --dur-fast: 150ms; /* hover, tooltip */
+  --dur-base: 240ms; /* screen change, menu */
+  --dur-scene: 420ms; /* section reveal, once on first view */
+  --dur-cinematic: 700ms; /* hero + closing headline only */
+
+  --ease-in-motion: cubic-bezier(0.16, 1, 0.3, 1); /* everything entering */
+  --ease-out-motion: cubic-bezier(0.7, 0, 0.84, 0); /* everything exiting */
+
+  /* ---------------------------------------------------------------- */
+  /* Stage system — implementation-support tokens (not in the spec's  */
+  /* design-system tables, but still owned here so components never   */
+  /* hardcode raw values for the grain/glow layers).                  */
+  /* ---------------------------------------------------------------- */
+  --grain-opacity: 0.055;
+  --glow-size: 640px;
+  --glow-blur: 140px;
+}
