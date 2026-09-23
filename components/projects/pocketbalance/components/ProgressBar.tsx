@@ -22,9 +22,9 @@ export function ProgressBar({
       <motion.div
         className="h-full rounded-full"
         style={{ backgroundColor: color }}
-        initial={{ width: "0%" }}
-        animate={{ width: hasActivated ? `${Math.min(100, percent)}%` : "0%" }}
-        transition={{ duration: duration.scene, ease: ease.in, delay }}
+        initial={hasActivated ? { width: "0%" } : false}
+        animate={{ width: `${Math.min(100, percent)}%` }}
+        transition={{ duration: duration.scene, ease: ease.in, delay: hasActivated ? delay : 0 }}
       />
     </div>
   );

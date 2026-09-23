@@ -1,17 +1,44 @@
 "use client";
 
 import { Bell, Wallet, ArrowUpRight, ArrowDownRight, Calendar, Search, Sparkles, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { pb } from "../pbTheme";
-import { account, balanceCard, weeklyStats, recentTransactions } from "../data/dashboard";
-import { useActivateOnce } from "../useActivateOnce";
+import {
+  account,
+  balanceCard,
+  weeklyStats,
+  recentTransactions,
+  type SimulatedSms,
+} from "../data/dashboard";
 import { BalanceCard } from "../components/BalanceCard";
 import { StatBox } from "../components/StatBox";
 import { ProgressBar } from "../components/ProgressBar";
 import { TransactionRow } from "../components/TransactionRow";
+import { CountUpNumber } from "../components/CountUpNumber";
 
-export function DashboardScreen({ isActive }: { isActive: boolean }) {
-  const hasActivated = useActivateOnce(isActive);
+export function DashboardScreen({
+  playIntro,
+  incoming = [],
+}: {
+  playIntro: boolean;
+  /** Bank messages delivered so far, oldest first. */
+  incoming?: SimulatedSms[];
+}) {
+  const hasActivated = playIntro;
   const weekPercent = Math.round((weeklyStats.weekDaysElapsed / weeklyStats.weekDaysTotal) * 100);
+  const newSpend = incoming.reduce((sum, sms) => sum + sms.amount, 0);
+  const newRows = [...incoming].reverse().map((sms) => ({
+    id: sms.id,
+    merchant: sms.merchant,
+    categoryLabel: sms.categoryLabel,
+    categoryKind: sms.categoryKind,
+    bank: account.bank,
+    time: "Just now",
+    amount: sms.amount,
+    type: "expense" as const,
+    isNew: true,
+  }));
+  const rows = [...newRows, ...recentTransactions.map((t) => ({ ...t, isNew: false }))].slice(0, 2);
 
   return (
     <div className="flex h-full flex-col gap-2.5 overflow-hidden px-4 py-3.5" style={{ backgroundColor: pb.bg }}>
@@ -41,12 +68,15 @@ export function DashboardScreen({ isActive }: { isActive: boolean }) {
       <BalanceCard
         bankInitials={account.initials}
         label={account.label}
-        balance={balanceCard.balance}
+        balance={balanceCard.balance - newSpend}
         currency={balanceCard.currency}
         dotCount={balanceCard.accountCount}
         activeDot={balanceCard.activeAccountIndex}
         toggleOptions={["Bank Balance", "Budget"]}
         hasActivated={hasActivated}
+        cardLayoutId="pb-hero-card"
+        accountLayoutId="pb-account-pill"
+        figureLayoutId="pb-hero-figure"
       />
 
       <div className="flex items-center justify-between">
@@ -74,7 +104,7 @@ export function DashboardScreen({ isActive }: { isActive: boolean }) {
               last 24h Spent
             </p>
             <p className="font-sans text-sm font-bold tabular-nums" style={{ color: pb.negative }}>
-              {weeklyStats.last24hSpent.toLocaleString("en-US")} EGP
+              <CountUpNumber value={weeklyStats.last24hSpent + newSpend} hasActivated={false} /> EGP
             </p>
           </div>
         </div>
@@ -87,7 +117,7 @@ export function DashboardScreen({ isActive }: { isActive: boolean }) {
           iconColor={pb.negative}
           iconBg={pb.negativeSoft}
           label="Current week spent"
-          value={`${weeklyStats.currentWeekSpent.toLocaleString("en-US")} EGP`}
+          value={`${(weeklyStats.currentWeekSpent + newSpend).toLocaleString("en-US")} EGP`}
           valueColor={pb.negative}
         />
         <StatBox
@@ -138,9 +168,25 @@ export function DashboardScreen({ isActive }: { isActive: boolean }) {
         </div>
 
         <div className="mt-1">
-          {recentTransactions.slice(0, 2).map((transaction) => (
-            <TransactionRow key={transaction.id} {...transaction} />
-          ))}
+          <AnimatePresence initial={false} mode="popLayout">
+            {rows.map(({ isNew, ...transaction }, index) => (
+              <motion.div
+                key={transaction.id}
+                layout
+                initial={{ opacity: 0, x: -24, backgroundColor: "rgba(59,130,246,0.18)" }}
+                animate={{ opacity: 1, x: 0, backgroundColor: "rgba(59,130,246,0)" }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], backgroundColor: { duration: 1.6 } }}
+                className="rounded-lg"
+              >
+                <TransactionRow
+                  {...transaction}
+                  playIntro={hasActivated && !isNew}
+                  delay={0.15 + index * 0.08}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>

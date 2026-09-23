@@ -36,9 +36,9 @@ export function CategoryCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: hasActivated ? 1 : 0, y: hasActivated ? 0 : 8 }}
-      transition={{ duration: duration.scene, ease: ease.in, delay }}
+      initial={hasActivated ? { opacity: 0, y: 8 } : false}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: duration.scene, ease: ease.in, delay: hasActivated ? delay : 0 }}
       className="rounded-xl border px-3 py-2.5"
       style={{ borderColor: pb.border, backgroundColor: pb.surface }}
     >

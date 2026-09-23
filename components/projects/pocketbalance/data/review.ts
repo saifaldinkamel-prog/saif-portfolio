@@ -1,14 +1,15 @@
 /**
- * Matches the real app's transaction-review bottom sheet exactly: a
- * genuine uncategorized purchase ("lulu2", a real Egyptian hypermarket
- * chain) with its real account/date/merchant fields and the real
- * category-chip set shown on that screen.
+ * The real app's transaction-review bottom sheet: account, date, and
+ * the category-chip set are from the real screen. The merchant and
+ * amount are swapped for a recognizable brand on the portfolio (the
+ * captured screenshot's merchant was a local store).
  */
 export const pendingTransaction = {
-  merchant: "lulu2",
-  amount: 634,
+  merchant: "Nike",
+  amount: 2450,
   account: "Banque Misr Debit Card •••• 6067",
   date: "9/16/2026 · 1:19 PM",
+  shortDate: "16/09/2026 · 1:19 PM",
 };
 
 export const reviewCategories = [

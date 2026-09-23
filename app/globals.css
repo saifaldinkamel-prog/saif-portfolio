@@ -1,4 +1,4 @@
-@import "tailwindcss";
+  @import "tailwindcss";
 @import "../styles/tokens.css";
 
 /**
@@ -80,10 +80,30 @@
   --ease-out-motion: var(--ease-out-motion);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background: var(--stage-void);
   color: var(--text-primary);
   font-family: var(--font-family-body);
+}
+
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(242, 244, 247, 0.5);
 }
 
 ::selection {

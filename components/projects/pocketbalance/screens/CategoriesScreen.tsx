@@ -3,12 +3,11 @@
 import { BarChart3, ArrowUpRight, ArrowUp, Calendar, ChevronDown } from "lucide-react";
 import { pb } from "../pbTheme";
 import { categoriesAccount, categorySummary, categoryRows } from "../data/categories";
-import { useActivateOnce } from "../useActivateOnce";
 import { AccountSelector } from "../components/AccountSelector";
 import { CategoryCard } from "../components/CategoryCard";
 
-export function CategoriesScreen({ isActive }: { isActive: boolean }) {
-  const hasActivated = useActivateOnce(isActive);
+export function CategoriesScreen({ playIntro }: { playIntro: boolean }) {
+  const hasActivated = playIntro;
 
   return (
     <div className="flex h-full flex-col gap-2.5 overflow-hidden px-4 py-4" style={{ backgroundColor: pb.bg }}>

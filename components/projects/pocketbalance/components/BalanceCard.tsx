@@ -1,4 +1,6 @@
 import { ChevronDown } from "lucide-react";
+import { motion } from "motion/react";
+import { duration, ease } from "@/components/shared/motion";
 import { pb } from "../pbTheme";
 import { CountUpNumber } from "./CountUpNumber";
 
@@ -11,6 +13,9 @@ export function BalanceCard({
   activeDot,
   toggleOptions,
   hasActivated,
+  cardLayoutId,
+  accountLayoutId,
+  figureLayoutId,
 }: {
   bankInitials: string;
   label: string;
@@ -20,9 +25,14 @@ export function BalanceCard({
   activeDot: number;
   toggleOptions: string[];
   hasActivated: boolean;
+  cardLayoutId?: string;
+  accountLayoutId?: string;
+  figureLayoutId?: string;
 }) {
   return (
-    <div
+    <motion.div
+      layoutId={cardLayoutId}
+      transition={{ duration: duration.scene, ease: ease.in }}
       className="relative overflow-hidden rounded-2xl border px-4 py-4"
       style={{
         borderColor: "rgba(167,139,250,0.35)",
@@ -41,7 +51,11 @@ export function BalanceCard({
       />
 
       <div className="relative flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
+        <motion.div
+          layoutId={accountLayoutId}
+          transition={{ duration: duration.scene, ease: ease.in }}
+          className="flex min-w-0 items-center gap-2 rounded-full"
+        >
           <span
             className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md font-sans text-[10px] font-bold"
             style={{ backgroundColor: "rgba(255,255,255,0.15)", color: pb.textPrimary }}
@@ -51,7 +65,7 @@ export function BalanceCard({
           <span className="truncate font-sans text-[13px] font-semibold" style={{ color: pb.textPrimary }}>
             {label}
           </span>
-        </div>
+        </motion.div>
         <span
           className="flex shrink-0 items-center gap-0.5 rounded-full border px-2 py-1 font-sans text-[10px] font-semibold"
           style={{ borderColor: "rgba(255,255,255,0.3)", color: pb.textPrimary }}
@@ -64,12 +78,17 @@ export function BalanceCard({
         <ToggleRow options={toggleOptions} />
       </div>
 
-      <p className="relative mt-4 font-sans text-4xl font-extrabold tabular-nums" style={{ color: pb.textPrimary }}>
+      <motion.p
+        layoutId={figureLayoutId}
+        transition={{ duration: duration.scene, ease: ease.in }}
+        className="relative mt-4 font-sans text-4xl font-extrabold tabular-nums"
+        style={{ color: pb.textPrimary }}
+      >
         <CountUpNumber value={balance} hasActivated={hasActivated} />{" "}
         <span className="text-2xl font-bold" style={{ color: "rgba(255,255,255,0.55)" }}>
           {currency}
         </span>
-      </p>
+      </motion.p>
 
       <div className="relative mt-4 flex justify-center gap-1.5">
         {Array.from({ length: dotCount }).map((_, index) => (
@@ -83,7 +102,7 @@ export function BalanceCard({
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

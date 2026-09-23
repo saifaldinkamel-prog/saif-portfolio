@@ -2,8 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate } from "motion/react";
-import { duration, ease } from "@/components/shared/motion";
+import { ease } from "@/components/shared/motion";
 
+/**
+ * A number that never snaps. On a screen's first visit it counts up
+ * from 0; on a repeat visit it starts at its final value. Either way,
+ * whenever `value` changes later (e.g. a new transaction lands), it
+ * tweens from whatever is on screen to the new value.
+ */
 export function CountUpNumber({
   value,
   hasActivated,
@@ -15,19 +21,23 @@ export function CountUpNumber({
   format?: (n: number) => string;
   className?: string;
 }) {
-  const [display, setDisplay] = useState(0);
-  const played = useRef(false);
+  const [display, setDisplay] = useState(hasActivated ? 0 : value);
+  const shown = useRef(display);
 
   useEffect(() => {
-    if (!hasActivated || played.current) return;
-    played.current = true;
-    const controls = animate(0, value, {
-      duration: duration.scene,
+    // Tween from the live on-screen value, so an interrupted run (or
+    // Strict Mode's dev double-invoke) resumes instead of restarting.
+    if (shown.current === value) return;
+    const controls = animate(shown.current, value, {
+      duration: 0.9,
       ease: ease.in,
-      onUpdate: setDisplay,
+      onUpdate: (latest) => {
+        shown.current = latest;
+        setDisplay(latest);
+      },
     });
     return () => controls.stop();
-  }, [hasActivated, value]);
+  }, [value]);
 
   return <span className={className}>{format(display)}</span>;
 }

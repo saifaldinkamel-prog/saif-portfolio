@@ -1,4 +1,6 @@
 import { ShoppingBag, ShieldCheck, Info, ChevronRight, type LucideIcon } from "lucide-react";
+import { motion } from "motion/react";
+import { duration, ease } from "@/components/shared/motion";
 import { pb } from "../pbTheme";
 
 const SIGNAL_STYLE: Record<string, { icon: LucideIcon; fg: string; soft: string }> = {
@@ -11,14 +13,21 @@ export function SignalRow({
   kind,
   title,
   subtitle,
+  playIntro = true,
+  delay = 0,
 }: {
   kind: keyof typeof SIGNAL_STYLE;
   title: string;
   subtitle: string;
+  playIntro?: boolean;
+  delay?: number;
 }) {
   const { icon: Icon, fg, soft } = SIGNAL_STYLE[kind];
   return (
-    <div
+    <motion.div
+      initial={playIntro ? { opacity: 0, y: 8 } : false}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: duration.scene, ease: ease.in, delay: playIntro ? delay : 0 }}
       className="flex items-center gap-2.5 rounded-xl border px-3 py-2"
       style={{ borderColor: pb.border, backgroundColor: pb.surface }}
     >
@@ -34,6 +43,6 @@ export function SignalRow({
         </p>
       </div>
       <ChevronRight size={14} color={pb.textTertiary} className="shrink-0" />
-    </div>
+    </motion.div>
   );
 }

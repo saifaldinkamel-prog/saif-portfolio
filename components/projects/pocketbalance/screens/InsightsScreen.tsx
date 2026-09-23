@@ -1,17 +1,18 @@
 "use client";
 
+import { motion } from "motion/react";
 import { BarChart3, ShoppingBag } from "lucide-react";
+import { duration, ease } from "@/components/shared/motion";
 import { pb, categoryColors } from "../pbTheme";
 import { insightsAccount, spendSummary, contributor, quickSignals } from "../data/insights";
-import { useActivateOnce } from "../useActivateOnce";
 import { AccountSelector } from "../components/AccountSelector";
 import { ToggleGroup } from "../components/ToggleGroup";
 import { ProgressBar } from "../components/ProgressBar";
 import { CountUpNumber } from "../components/CountUpNumber";
 import { SignalRow } from "../components/SignalRow";
 
-export function InsightsScreen({ isActive }: { isActive: boolean }) {
-  const hasActivated = useActivateOnce(isActive);
+export function InsightsScreen({ playIntro }: { playIntro: boolean }) {
+  const hasActivated = playIntro;
   const contributorColor = categoryColors[contributor.categoryKind];
 
   return (
@@ -25,9 +26,11 @@ export function InsightsScreen({ isActive }: { isActive: boolean }) {
         </p>
       </div>
 
-      <AccountSelector label={insightsAccount} />
+      <AccountSelector label={insightsAccount} layoutId="pb-account-pill" />
 
-      <div
+      <motion.div
+        layoutId="pb-hero-card"
+        transition={{ duration: duration.scene, ease: ease.in }}
         className="relative overflow-hidden rounded-2xl border px-3.5 py-3"
         style={{ borderColor: "rgba(59,130,246,0.4)", backgroundColor: pb.surfaceRaised }}
       >
@@ -62,9 +65,14 @@ export function InsightsScreen({ isActive }: { isActive: boolean }) {
         <p className="relative mt-2 font-sans text-[11px]" style={{ color: pb.textSecondary }}>
           You spent
         </p>
-        <p className="relative font-sans text-3xl font-extrabold tabular-nums" style={{ color: pb.negative }}>
+        <motion.p
+          layoutId="pb-hero-figure"
+          transition={{ duration: duration.scene, ease: ease.in }}
+          className="relative font-sans text-3xl font-extrabold tabular-nums"
+          style={{ color: pb.negative }}
+        >
           <CountUpNumber value={spendSummary.currentWeek} hasActivated={hasActivated} /> EGP
-        </p>
+        </motion.p>
         <p className="relative font-sans text-[11px]" style={{ color: pb.textSecondary }}>
           more than last week
         </p>
@@ -130,15 +138,22 @@ export function InsightsScreen({ isActive }: { isActive: boolean }) {
             {contributor.percentOfSpending}% of spending
           </p>
         </div>
-      </div>
+      </motion.div>
 
       <div className="flex-1 overflow-hidden">
         <p className="font-sans text-[13px] font-bold" style={{ color: pb.textPrimary }}>
           Quick signals
         </p>
         <div className="mt-1.5 flex flex-col gap-1.5">
-          {quickSignals.slice(0, 2).map((signal) => (
-            <SignalRow key={signal.id} kind={signal.kind} title={signal.title} subtitle={signal.subtitle} />
+          {quickSignals.slice(0, 2).map((signal, index) => (
+            <SignalRow
+              key={signal.id}
+              kind={signal.kind}
+              title={signal.title}
+              subtitle={signal.subtitle}
+              playIntro={hasActivated}
+              delay={0.3 + index * 0.08}
+            />
           ))}
         </div>
       </div>

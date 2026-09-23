@@ -1,169 +1,192 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useTransform } from "motion/react";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
-import { useSwipeGesture } from "@/components/shared/useSwipeGesture";
-import { pb, categoryColors } from "../pbTheme";
+import { useState, type FormEvent } from "react";
+import { motion, useAnimationControls } from "motion/react";
+import { ArrowUp, ChevronDown, X } from "lucide-react";
+import { pb } from "../pbTheme";
 import type { pendingTransaction as PendingTransaction, reviewCategories as ReviewCategories } from "../data/review";
 
-const SWIPE_RIGHT = "Food & Drinks";
-const SWIPE_LEFT = "Shopping";
+const SHEET = "#162033";
+const FIELD = "#1C2940";
+const ADD_TEAL = "#0F766E";
+const SAVE_BLUE = "#2563EB";
 
 /**
- * Reuses useSwipeGesture — same hook Playground's "swipe to categorize"
- * demo (Phase 3) mounts on its own card. Swipe-to-categorize is a
- * portfolio adaptation of the real app's tap-chip review sheet, not a
- * claim the real app uses a swipe gesture — approved as such.
+ * The real app's "categorize this transaction" bottom sheet, working:
+ * chips select, a custom category can be typed and added, Save files
+ * the transaction under the chosen category, Later (or ×, or dragging
+ * the sheet down) leaves it for later. Save with nothing chosen nudges
+ * the chip row instead of guessing.
  */
 export function TransactionReviewCard({
   transaction,
   categories,
+  onSave,
+  onLater,
 }: {
   transaction: typeof PendingTransaction;
   categories: typeof ReviewCategories;
+  onSave: (category: string) => void;
+  onLater: () => void;
 }) {
-  const [resolvedCategory, setResolvedCategory] = useState<string | null>(null);
-  const resolvingRef = useRef(false);
+  const [chips, setChips] = useState<string[]>(() => categories.map((c) => c.name));
+  const [selected, setSelected] = useState<string | null>(null);
+  const [custom, setCustom] = useState("");
+  const [note, setNote] = useState("");
+  const chipRow = useAnimationControls();
 
-  const { drag, dragElastic, dragConstraints, dragTransition, onDragEnd, style, offset } = useSwipeGesture({
-    axis: "x",
-    threshold: 110,
-    onCommit: (direction) => {
-      if (resolvingRef.current) return;
-      resolve(direction === 1 ? SWIPE_RIGHT : SWIPE_LEFT);
-    },
-  });
-
-  function resolve(category: string) {
-    resolvingRef.current = true;
-    setResolvedCategory(category);
+  function addCustom(event: FormEvent) {
+    event.preventDefault();
+    const name = custom.trim();
+    if (!name) return;
+    setChips((prev) => (prev.includes(name) ? prev : [name, ...prev]));
+    setSelected(name);
+    setCustom("");
   }
 
-  function reset() {
-    resolvingRef.current = false;
-    setResolvedCategory(null);
+  function save() {
+    if (!selected) {
+      chipRow.start({ x: [0, -8, 8, -5, 5, 0], transition: { duration: 0.4 } });
+      return;
+    }
+    onSave(selected);
   }
-
-  const rotate = useTransform(offset, [-160, 0, 160], [-6, 0, 6]);
-  const rightHint = useTransform(offset, [20, 140], [0, 1]);
-  const leftHint = useTransform(offset, [-140, -20], [1, 0]);
 
   return (
-    <div
-      className="w-full rounded-2xl border px-4 py-4"
-      style={{ borderColor: pb.border, backgroundColor: pb.surfaceRaised }}
+    <motion.div
+      drag="y"
+      dragConstraints={{ top: 0, bottom: 0 }}
+      dragElastic={{ top: 0, bottom: 0.6 }}
+      onDragEnd={(_, info) => {
+        if (info.offset.y > 90 || info.velocity.y > 500) onLater();
+      }}
+      className="relative rounded-[1.6rem] border px-4 pb-4 pt-2.5"
+      style={{ backgroundColor: SHEET, borderColor: pb.border, boxShadow: "0 20px 40px rgba(0,0,0,0.45)" }}
     >
-      <div className="mx-auto mb-3 h-1 w-10 rounded-full" style={{ backgroundColor: pb.border }} />
+      <div className="mx-auto h-1 w-9 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.25)" }} />
 
-      <div className="flex w-full items-center justify-between px-1">
-        <motion.span
-          className="font-sans text-[10px] font-bold uppercase"
-          style={{ opacity: leftHint, color: categoryColors.shopping.fg }}
+      <button
+        type="button"
+        onClick={onLater}
+        aria-label="Close"
+        className="absolute right-3.5 top-3.5 p-1"
+        style={{ color: pb.textSecondary }}
+      >
+        <X size={14} />
+      </button>
+
+      <div className="mt-3 flex items-center gap-2.5">
+        <span
+          className="flex h-8 w-8 items-center justify-center rounded-lg"
+          style={{ backgroundColor: "rgba(127,29,29,0.45)", color: pb.textPrimary }}
         >
-          &larr; {SWIPE_LEFT}
-        </motion.span>
-        <motion.span
-          className="font-sans text-[10px] font-bold uppercase"
-          style={{ opacity: rightHint, color: categoryColors.food.fg }}
-        >
-          {SWIPE_RIGHT} &rarr;
-        </motion.span>
+          <ArrowUp size={15} />
+        </span>
+        <span className="font-sans text-[15px] font-bold" style={{ color: pb.textPrimary }}>
+          Purchase
+        </span>
       </div>
 
-      <motion.div
-        drag={drag}
-        dragElastic={dragElastic}
-        dragConstraints={dragConstraints}
-        dragTransition={dragTransition}
-        onDragEnd={onDragEnd}
-        style={{ ...style, rotate }}
-        className="mt-1 w-full cursor-grab touch-none select-none active:cursor-grabbing"
-      >
-        <div className="flex items-center gap-2">
-          <span
-            className="flex h-7 w-7 items-center justify-center rounded-full"
-            style={{ backgroundColor: "rgba(127,29,29,0.4)", color: pb.negative }}
-          >
-            <ArrowUpRight size={14} />
-          </span>
-          <span className="font-sans text-[12px] font-semibold" style={{ color: pb.textSecondary }}>
-            Purchase
-          </span>
-        </div>
-        <p className="mt-1.5 font-sans text-3xl font-extrabold tabular-nums" style={{ color: pb.textPrimary }}>
-          {transaction.amount.toLocaleString("en-US")} EGP
-        </p>
+      <p className="mt-2.5 font-sans text-[26px] font-extrabold leading-none tabular-nums" style={{ color: pb.textPrimary }}>
+        {transaction.amount.toLocaleString("en-US")} EGP
+      </p>
 
-        <div className="mt-3 flex flex-col gap-1.5 border-t pt-3" style={{ borderColor: pb.border }}>
-          <InfoRow label="Account" value={transaction.account} />
-          <InfoRow label="Date" value={transaction.date} />
-          <InfoRow label="Merchant / recipient" value={transaction.merchant} />
-        </div>
+      <div className="mt-3 flex flex-col gap-1.5 rounded-xl border px-3 py-2.5" style={{ borderColor: pb.border, backgroundColor: FIELD }}>
+        <InfoRow label="Account" value={transaction.account} />
+        <InfoRow label="Date" value={transaction.date} />
+        <InfoRow label="Merchant / recipient" value={transaction.merchant} />
+      </div>
 
-        <p className="mt-2 flex items-center gap-1 font-sans text-[11px] font-semibold" style={{ color: pb.blue }}>
-          Message details <ChevronDown size={12} />
-        </p>
-      </motion.div>
+      <p className="mt-2 flex items-center gap-0.5 font-sans text-[10.5px] font-semibold" style={{ color: pb.blue }}>
+        Message details <ChevronDown size={11} />
+      </p>
 
-      <p className="mt-3 font-sans text-[12px] font-bold" style={{ color: pb.textPrimary }}>
+      <p className="mt-2.5 font-sans text-[12px] font-bold" style={{ color: pb.textPrimary }}>
         Choose category
       </p>
-      <div className="mt-1.5 flex gap-1.5 overflow-x-hidden">
-        {categories.map((category) => {
-          const color = categoryColors[category.kind];
-          const isChosen = resolvedCategory === category.name;
+      <motion.div
+        animate={chipRow}
+        className="mt-1.5 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {chips.map((chip) => {
+          const active = selected === chip;
           return (
-            <button
-              key={category.name}
+            <motion.button
+              key={chip}
               type="button"
-              onClick={() => resolve(category.name)}
-              className="shrink-0 rounded-full border px-2.5 py-1.5 font-sans text-[11px] font-semibold"
+              layout
+              onClick={() => setSelected(active ? null : chip)}
+              whileTap={{ scale: 0.92 }}
+              className="shrink-0 rounded-full border px-2.5 py-1.5 font-sans text-[10.5px] font-semibold"
               style={{
-                borderColor: isChosen ? color.fg : pb.border,
-                backgroundColor: isChosen ? color.soft : "transparent",
-                color: isChosen ? color.fg : pb.textSecondary,
+                backgroundColor: active ? "rgba(37,99,235,0.22)" : FIELD,
+                borderColor: active ? SAVE_BLUE : "transparent",
+                color: active ? "#BFDBFE" : pb.textPrimary,
               }}
             >
-              {category.name}
-            </button>
+              {chip}
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
+
+      <form onSubmit={addCustom} className="mt-2 flex gap-1.5">
+        <input
+          value={custom}
+          onChange={(event) => setCustom(event.target.value)}
+          placeholder="Create custom category"
+          maxLength={20}
+          className="min-w-0 flex-1 rounded-lg border bg-transparent px-2.5 py-1.5 font-sans text-[10.5px] outline-none placeholder:text-[#64748B] focus:border-[#3B82F6]"
+          style={{ borderColor: "rgba(255,255,255,0.14)", color: pb.textPrimary }}
+        />
+        <button
+          type="submit"
+          className="rounded-lg px-3 font-sans text-[10.5px] font-bold"
+          style={{ backgroundColor: ADD_TEAL, color: pb.textPrimary }}
+        >
+          Add
+        </button>
+      </form>
+
+      <input
+        value={note}
+        onChange={(event) => setNote(event.target.value)}
+        placeholder="Optional note"
+        maxLength={40}
+        className="mt-1.5 w-full rounded-lg border bg-transparent px-2.5 py-1.5 font-sans text-[10.5px] outline-none placeholder:text-[#64748B] focus:border-[#3B82F6]"
+        style={{ borderColor: "rgba(255,255,255,0.14)", color: pb.textPrimary }}
+      />
 
       <div className="mt-3 flex gap-2">
         <button
           type="button"
-          onClick={reset}
-          className="flex-1 rounded-lg border py-2 font-sans text-[12px] font-semibold"
-          style={{ borderColor: pb.border, color: pb.textSecondary }}
+          onClick={onLater}
+          className="flex-1 rounded-lg border py-2 font-sans text-[11px] font-bold"
+          style={{ borderColor: "rgba(255,255,255,0.7)", color: pb.textPrimary }}
         >
           Later
         </button>
-        <button
+        <motion.button
           type="button"
-          onClick={reset}
-          disabled={!resolvedCategory}
-          className="flex-1 rounded-lg py-2 font-sans text-[12px] font-semibold"
-          style={{
-            backgroundColor: resolvedCategory ? pb.blue : pb.surface,
-            color: resolvedCategory ? "#FFFFFF" : pb.textTertiary,
-          }}
+          onClick={save}
+          whileTap={{ scale: 0.96 }}
+          className="flex-1 rounded-lg py-2 font-sans text-[11px] font-bold"
+          style={{ backgroundColor: SAVE_BLUE, color: "#FFFFFF" }}
         >
-          {resolvedCategory ? `Save as ${resolvedCategory}` : "Save"}
-        </button>
+          Save
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between">
-      <span className="font-sans text-[11px]" style={{ color: pb.textTertiary }}>
+    <div className="flex items-center justify-between gap-3">
+      <span className="shrink-0 font-sans text-[10.5px]" style={{ color: pb.textTertiary }}>
         {label}
       </span>
-      <span className="font-sans text-[11px] font-semibold" style={{ color: pb.textPrimary }}>
+      <span className="truncate font-sans text-[10.5px] font-bold" style={{ color: pb.textPrimary }}>
         {value}
       </span>
     </div>

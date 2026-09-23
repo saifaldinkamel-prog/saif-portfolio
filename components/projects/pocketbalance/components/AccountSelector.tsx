@@ -1,9 +1,13 @@
 import { Building2, ChevronDown } from "lucide-react";
+import { motion } from "motion/react";
+import { duration, ease } from "@/components/shared/motion";
 import { pb } from "../pbTheme";
 
-export function AccountSelector({ label }: { label: string }) {
+export function AccountSelector({ label, layoutId }: { label: string; layoutId?: string }) {
   return (
-    <div
+    <motion.div
+      layoutId={layoutId}
+      transition={{ duration: duration.scene, ease: ease.in }}
       className="flex items-center gap-2 rounded-full border px-3 py-2"
       style={{ borderColor: pb.border, backgroundColor: pb.surface }}
     >
@@ -12,6 +16,6 @@ export function AccountSelector({ label }: { label: string }) {
         Account: <span className="font-semibold" style={{ color: pb.textPrimary }}>{label}</span>
       </span>
       <ChevronDown size={14} color={pb.textTertiary} />
-    </div>
+    </motion.div>
   );
 }

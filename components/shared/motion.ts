@@ -21,14 +21,6 @@ export const ease = {
   out: [0.7, 0, 0.84, 0], // --ease-out-motion — everything exiting
 } as const;
 
-/** Drag/swipe settle spring, shared by the PocketBalance phone and the
- * Playground "swipe to categorize" card via useSwipeGesture. */
-export const springGesture = {
-  type: "spring",
-  stiffness: 500,
-  damping: 35,
-} as const;
-
 /** Exits run at ~70% of the matching entrance duration, per the handoff. */
 export function exitDuration(entrance: number): number {
   return entrance * 0.7;
