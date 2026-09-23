@@ -4,7 +4,16 @@
  * amount are swapped for a recognizable brand on the portfolio (the
  * captured screenshot's merchant was a local store).
  */
+export interface ReviewTransaction {
+  kind: "purchase" | "transfer";
+  merchant: string;
+  amount: number;
+  account: string;
+  date: string;
+}
+
 export const pendingTransaction = {
+  kind: "purchase" as const,
   merchant: "Nike",
   amount: 2450,
   account: "Banque Misr Debit Card •••• 6067",

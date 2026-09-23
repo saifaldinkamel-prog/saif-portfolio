@@ -1,3 +1,5 @@
+import type { CategoryKind } from "../pbTheme";
+
 /**
  * Values match the real app's Home screen screenshot exactly (the
  * "screenshot 5" / updated Home variant): balance, weekly stats,
@@ -25,18 +27,44 @@ export const weeklyStats = {
   weekDaysTotal: 7,
 };
 
+export interface SimulatedSms {
+  id: string;
+  kind: "purchase" | "transfer";
+  merchant: string;
+  categoryLabel: string;
+  categoryKind: CategoryKind;
+  amount: number;
+  /** "auto" = sorted on its own; "review" = the app had to ask; "done" = the user sorted it. */
+  status: "auto" | "review" | "done";
+  /** True when "auto" came from a category the user taught it (merchant learning). */
+  learned?: boolean;
+}
+
+export type SmsType = "known" | "unknown" | "transfer";
+
 /**
- * Bank messages the case study can deliver to the phone on demand.
- * Merchants and amounts are taken from the real app data in this
- * folder; the delivery itself is a clearly-labelled simulation.
+ * Pools the case study draws simulated bank messages from, following
+ * the real app's rules:
+ * - a merchant it already knows is sorted on its own;
+ * - a merchant it has never seen asks once, then can be remembered;
+ * - an InstaPay transfer names no merchant, so it always asks and is
+ *   never learned.
  */
-export const simulatedSms = [
-  { id: "sms-vodafone", merchant: "Vodafone", categoryLabel: "Bills & Utilities", categoryKind: "bills" as const, amount: 300 },
-  { id: "sms-talabat", merchant: "Talabat", categoryLabel: "Food & Dining", categoryKind: "food" as const, amount: 186 },
-  { id: "sms-nike", merchant: "Nike", categoryLabel: "Shopping", categoryKind: "shopping" as const, amount: 2450 },
+export const knownMerchants: { merchant: string; categoryLabel: string; categoryKind: CategoryKind; amount: number }[] = [
+  { merchant: "Amazon", categoryLabel: "Shopping", categoryKind: "shopping", amount: 1250 },
+  { merchant: "Talabat", categoryLabel: "Food & Dining", categoryKind: "food", amount: 186 },
+  { merchant: "Uber", categoryLabel: "Transportation", categoryKind: "transport", amount: 95 },
+  { merchant: "Vodafone", categoryLabel: "Bills & Utilities", categoryKind: "bills", amount: 300 },
 ];
 
-export type SimulatedSms = (typeof simulatedSms)[number];
+export const unknownMerchants: { merchant: string; amount: number }[] = [
+  { merchant: "Nike", amount: 2450 },
+  { merchant: "Adidas", amount: 1899 },
+  { merchant: "Zara", amount: 1350 },
+  { merchant: "Starbucks", amount: 145 },
+];
+
+export const transferAmounts = [500, 1200, 250];
 
 export const recentTransactions = [
   {

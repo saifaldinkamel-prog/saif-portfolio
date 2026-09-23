@@ -14,7 +14,10 @@ export function TransactionRow({
   type,
   playIntro = true,
   delay = 0,
+  badge,
 }: {
+  /** A small tag after the category, e.g. "Auto" for merchant-learned categories. */
+  badge?: string;
   merchant: string;
   categoryLabel: string;
   categoryKind: CategoryKind;
@@ -50,7 +53,15 @@ export function TransactionRow({
           >
             {categoryLabel}
           </span>
-          <span className="font-sans text-[10px]" style={{ color: pb.textTertiary }}>
+          {badge && (
+            <span
+              className="rounded-full px-1.5 py-0.5 font-sans text-[9px] font-bold"
+              style={{ backgroundColor: pb.blueSoft, color: pb.blue }}
+            >
+              &#10022; {badge}
+            </span>
+          )}
+          <span className="truncate font-sans text-[10px]" style={{ color: pb.textTertiary }}>
             {bank}
           </span>
         </div>

@@ -2,13 +2,22 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  type AnimationPlaybackControls,
+} from "motion/react";
 
 const STORAGE_KEY = "saif-intro-seen";
 const IntroContext = createContext(true);
@@ -48,19 +57,34 @@ export function IntroGate({ children }: { children: ReactNode }) {
   const counter = useTransform(progress, (v) => String(Math.round(v)).padStart(3, "0"));
   const barScale = useTransform(progress, [0, 100], [0, 1]);
 
+  const counting = useRef<AnimationPlaybackControls | null>(null);
+
   useEffect(() => {
     if (skip) return;
     document.documentElement.style.overflow = "hidden";
-    const controls = animate(progress, 100, {
+    counting.current = animate(progress, 100, {
       duration: 1.9,
       ease: [0.65, 0, 0.35, 1],
-      onComplete: () => setPhase("lift"),
+      onComplete: () => setPhase((current) => (current === "count" ? "lift" : current)),
     });
     return () => {
-      controls.stop();
+      counting.current?.stop();
       document.documentElement.style.overflow = "";
     };
   }, [skip, progress]);
+
+  // Anyone in a hurry can skip: any key, click, or tap lifts the curtain now.
+  const skipIntro = useCallback(() => {
+    counting.current?.stop();
+    animate(progress, 100, { duration: 0.25 });
+    setPhase((current) => (current === "count" ? "lift" : current));
+  }, [progress]);
+
+  useEffect(() => {
+    if (skip || phase !== "count") return;
+    window.addEventListener("keydown", skipIntro);
+    return () => window.removeEventListener("keydown", skipIntro);
+  }, [skip, phase, skipIntro]);
 
   function handleLifted() {
     try {
@@ -85,6 +109,7 @@ export function IntroGate({ children }: { children: ReactNode }) {
           onAnimationComplete={() => {
             if (phase === "lift") handleLifted();
           }}
+          onPointerDown={skipIntro}
           className="fixed inset-0 z-[95] flex flex-col justify-between bg-stage-void px-6 py-8 md:px-16 md:py-12"
         >
           <div className="flex items-center justify-between font-mono text-mono-label uppercase text-text-tertiary">
@@ -108,7 +133,17 @@ export function IntroGate({ children }: { children: ReactNode }) {
               <motion.div className="h-full origin-left" style={{ scaleX: barScale, backgroundColor: "var(--signal)" }} />
             </div>
             <div className="mt-4 flex items-end justify-between">
-              <span className="font-mono text-mono-label uppercase text-text-tertiary">Turning the lights on</span>
+              <span className="flex flex-col gap-2 font-mono text-mono-label uppercase text-text-tertiary">
+                <span>Turning the lights on</span>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.4 }}
+                  className="text-text-secondary"
+                >
+                  Tap anywhere to skip
+                </motion.span>
+              </span>
               <motion.span className="font-display text-[clamp(3rem,10vw,8rem)] font-semibold leading-none text-text-primary tabular-nums">
                 {counter}
               </motion.span>

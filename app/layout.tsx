@@ -22,10 +22,29 @@ const geistMono = Geist_Mono({
   weight: ["400", "500", "600"],
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+const DESCRIPTION =
+  "Portfolio of Saifaldin Kamel, a software engineer in Giza, Egypt with a strength in frontend and mobile — currently building PocketBalance, a real Android finance app.";
+
 export const metadata: Metadata = {
-  title: "Saifaldin Kamel — Frontend & Mobile Developer",
-  description:
-    "Portfolio of Saifaldin Kamel, a frontend and mobile developer in Giza, Egypt. Built in the dark.",
+  metadataBase: new URL(SITE_URL),
+  title: "Saifaldin Kamel — Software Engineer",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: "Saif.dev",
+    title: "Saifaldin Kamel — Software Engineer",
+    description: DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

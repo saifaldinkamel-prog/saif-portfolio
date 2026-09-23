@@ -15,6 +15,7 @@ const LINKS = [
   { label: "GitHub", href: "https://github.com/saifaldinkamel-prog" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/saifaldin-kamel-149087322/" },
   { label: "Email", href: `mailto:${EMAIL}` },
+  { label: "Résumé", href: "/resume.pdf" },
 ];
 
 /**
@@ -102,7 +103,7 @@ export function ClosingScene() {
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
           {LINKS.map(({ label, href }) => {
-            const external = href.startsWith("http");
+            const external = href.startsWith("http") || href.endsWith(".pdf");
             return (
               <Magnetic key={label} strength={0.35}>
                 <a

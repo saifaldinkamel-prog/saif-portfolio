@@ -3,6 +3,8 @@ export interface Project {
   name: string;
   tagline: string;
   type: string;
+  /** Where the real project stands, e.g. "In development" or "Live". */
+  status: string;
   year: string;
   tags: string[];
   /** Brand color used for the project's hover preview and glow. */
@@ -18,10 +20,19 @@ export const projects: Project[] = [
   {
     slug: "pocketbalance",
     name: "PocketBalance",
-    tagline: "Bank SMS messages, turned into a balance you can trust.",
-    type: "Mobile app",
+    tagline: "A real Android app that turns your bank's SMS messages into a balance you can trust.",
+    type: "Android app",
+    status: "In development",
     year: "2026",
     tags: ["React Native", "TypeScript", "SQLite"],
     accent: "#7C3AED",
   },
 ];
+
+/**
+ * Where "Work" leads. With a single project there's no index to show,
+ * so links go straight to its page; add a second project and every
+ * "Work" link (and /projects itself) switches to the index automatically.
+ */
+export const hasProjectIndex = projects.length > 1;
+export const workHref = hasProjectIndex ? "/projects" : `/projects/${projects[0].slug}`;

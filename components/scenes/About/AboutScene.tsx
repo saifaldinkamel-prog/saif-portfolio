@@ -12,8 +12,8 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const FACTS = [
   { label: "Based in", value: "6th of October, Giza, Egypt" },
   { label: "Studying", value: "B.Sc. Software Engineering — Modern Sciences and Arts University, final year" },
-  { label: "Focus", value: "Frontend & mobile — interfaces, interaction, and motion" },
-  { label: "Open to", value: "Internships and junior frontend / mobile roles" },
+  { label: "Focus", value: "Software engineering — strongest in frontend and mobile apps" },
+  { label: "Open to", value: "Internships and junior software engineering roles" },
 ];
 
 const STATS = [
@@ -66,6 +66,20 @@ export function AboutScene() {
                 </span>
               </motion.div>
             ))}
+            <motion.a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              data-cursor="Open"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ duration: 0.8, ease: EASE, delay: 0.35 }}
+              className="group mt-6 inline-flex items-center gap-3 rounded-full border border-signal-border bg-signal-wash px-5 py-3 font-sans text-small font-medium text-signal-text transition-colors hover:bg-signal hover:text-on-signal"
+            >
+              Download my résumé
+              <span className="inline-block transition-transform duration-300 group-hover:translate-y-0.5">&darr;</span>
+            </motion.a>
           </div>
 
           <div className="flex flex-col gap-10">

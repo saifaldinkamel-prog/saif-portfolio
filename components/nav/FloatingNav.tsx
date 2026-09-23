@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, useScroll, useTransform } from "motion/react";
 import { TransitionLink } from "@/components/transition/TransitionProvider";
+import { workHref } from "@/components/scenes/Projects/projects";
 
 const LINKS = [
   { id: "about", label: "About" },
-  { id: "projects", label: "Projects", href: "/projects", mobile: true },
+  { id: "work", label: "Work", href: workHref, mobile: true },
   { id: "how-i-build", label: "Process" },
 ];
 
@@ -55,7 +56,7 @@ export function FloatingNav() {
         </TransitionLink>
         {LINKS.map((link) => {
           const href = link.href ?? anchor(link.id);
-          const active = link.href ? pathname.startsWith(link.href) : false;
+          const active = link.href ? pathname.startsWith("/projects") : false;
           return (
             <TransitionLink
               key={link.id}

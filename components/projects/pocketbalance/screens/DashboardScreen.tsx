@@ -36,6 +36,7 @@ export function DashboardScreen({
     time: "Just now",
     amount: sms.amount,
     type: "expense" as const,
+    badge: sms.status === "auto" ? (sms.learned ? "Learned" : "Auto") : undefined,
     isNew: true,
   }));
   const rows = [...newRows, ...recentTransactions.map((t) => ({ ...t, isNew: false }))].slice(0, 2);

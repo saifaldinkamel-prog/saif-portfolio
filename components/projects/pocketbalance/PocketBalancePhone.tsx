@@ -16,6 +16,8 @@ import { CategoriesScreen } from "./screens/CategoriesScreen";
 import { TransactionReviewScreen } from "./screens/TransactionReviewScreen";
 import { categoryRows } from "./data/categories";
 import { account, type SimulatedSms } from "./data/dashboard";
+import { reviewCategories } from "./data/review";
+import { TransactionReviewCard, type ReviewResult } from "./components/TransactionReviewCard";
 import { categoryColors, pb } from "./pbTheme";
 
 const SCREEN_COUNT = 4;
@@ -55,6 +57,7 @@ export function PocketBalancePhone({
   onScreenChange,
   incoming = [],
   banner = null,
+  review = null,
 }: {
   scrollDrive: MotionValue<number>;
   /** Optional: lets a hosting scene mirror screenIndex for its own
@@ -65,6 +68,12 @@ export function PocketBalancePhone({
   incoming?: SimulatedSms[];
   /** A message currently showing as a notification; `parsed` highlights the extracted fields. */
   banner?: { sms: SimulatedSms; parsed: boolean } | null;
+  /** A delivered message the app couldn't categorize — opens the categorize popup over the home screen. */
+  review?: {
+    sms: SimulatedSms;
+    onDone: (result: ReviewResult) => void;
+    onLater: () => void;
+  } | null;
 }) {
   const [screenIndex, setScreenIndex] = useState(0);
   const [controlMode, setControlMode] = useState<ControlMode>("scroll");
@@ -226,16 +235,79 @@ export function PocketBalancePhone({
                   </span>
                 </div>
                 <p className="mt-1 font-sans text-[11.5px] leading-snug" style={{ color: pb.textPrimary }}>
-                  Purchase of{" "}
-                  <ParsedToken on={banner.parsed} color={pb.negative}>
-                    EGP {banner.sms.amount.toFixed(2)}
-                  </ParsedToken>{" "}
-                  at{" "}
-                  <ParsedToken on={banner.parsed} color={categoryColors[banner.sms.categoryKind].fg}>
-                    {banner.sms.merchant}
-                  </ParsedToken>{" "}
-                  on card ending 1234.
+                  {banner.sms.kind === "transfer" ? (
+                    <>
+                      InstaPay transfer of{" "}
+                      <ParsedToken on={banner.parsed} color={pb.negative}>
+                        EGP {banner.sms.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </ParsedToken>{" "}
+                      from account ending 1234.
+                    </>
+                  ) : (
+                    <>
+                      Purchase of{" "}
+                      <ParsedToken on={banner.parsed} color={pb.negative}>
+                        EGP {banner.sms.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </ParsedToken>{" "}
+                      at{" "}
+                      <ParsedToken
+                        on={banner.parsed}
+                        color={banner.sms.status === "auto" ? categoryColors[banner.sms.categoryKind].fg : pb.amber}
+                      >
+                        {banner.sms.merchant}
+                      </ParsedToken>{" "}
+                      on card ending 1234.
+                    </>
+                  )}
                 </p>
+                <AnimatePresence>
+                  {banner.parsed && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      className="mt-1.5 flex items-center gap-1 font-sans text-[10.5px] font-bold"
+                      style={{ color: banner.sms.status === "auto" ? pb.positive : pb.amber }}
+                    >
+                      {bannerStatus(banner.sms)}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {review && screenIndex === 0 && (
+              <motion.div
+                key="review-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-40 flex flex-col justify-end px-2 pb-2"
+                style={{ backgroundColor: "rgba(2,6,15,0.55)" }}
+                onPointerDownCapture={(event) => event.stopPropagation()}
+              >
+                <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "100%" }}
+                  transition={{ duration: 0.5, ease: ease.in }}
+                >
+                  <TransactionReviewCard
+                    key={review.sms.id}
+                    transaction={{
+                      kind: review.sms.kind,
+                      merchant: review.sms.kind === "transfer" ? "Not in the SMS" : review.sms.merchant,
+                      amount: review.sms.amount,
+                      account: account.label,
+                      date: "Just now",
+                    }}
+                    categories={reviewCategories}
+                    offerLearning={review.sms.kind !== "transfer"}
+                    onDone={review.onDone}
+                    onLater={review.onLater}
+                  />
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -261,6 +333,13 @@ export function PocketBalancePhone({
       </div>
     </div>
   );
+}
+
+function bannerStatus(sms: SimulatedSms): string {
+  if (sms.kind === "transfer") return "? Bank transfer — no store name, so it asks you";
+  if (sms.status !== "auto") return "? New store — PocketBalance asks you once";
+  if (sms.learned) return `✓ Learned from you → ${sms.categoryLabel}, automatically`;
+  return `✓ Known store → ${sms.categoryLabel}, automatically`;
 }
 
 function ParsedToken({ on, color, children }: { on: boolean; color: string; children: ReactNode }) {

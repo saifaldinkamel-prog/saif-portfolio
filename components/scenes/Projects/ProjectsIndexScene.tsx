@@ -94,29 +94,7 @@ export function ProjectsIndexScene() {
               </div>
             </motion.div>
           ))}
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: active ? 0.35 : 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE, delay: 0.75 + projects.length * 0.1 }}
-            className="border-y border-dashed py-10 md:py-14"
-            style={{ borderColor: "var(--border-hairline)" }}
-          >
-            <div className="flex items-center gap-6 md:gap-12">
-              <span className="w-8 shrink-0 font-mono text-mono-label text-text-tertiary">
-                {String(projects.length + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="font-display text-[clamp(2.25rem,6.5vw,6rem)] font-semibold leading-[0.95] tracking-[-0.045em] text-outline">
-                  Next project
-                </p>
-                <p className="mt-3 flex items-center gap-2 font-sans text-body text-text-tertiary">
-                  In the works &mdash; this slot fills in when it ships
-                  <span className="inline-block h-4 w-[2px] animate-pulse bg-signal" />
-                </p>
-              </div>
-            </div>
-          </motion.div>
+          <div className="border-t" style={{ borderColor: "var(--border-hairline)" }} />
         </div>
       </div>
 
@@ -174,6 +152,10 @@ function ProjectRow({ project, index, onEnter }: { project: Project; index: numb
             {project.name}
           </p>
           <p className="mt-3 font-sans text-body text-text-secondary">{project.tagline}</p>
+          <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-signal-border bg-signal-wash px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-signal-text">
+            <span className="h-1.5 w-1.5 rounded-full bg-signal" />
+            {project.type} &middot; {project.status}
+          </span>
           <div className="relative mt-8 h-[347px] w-40 lg:hidden">
             <div className="absolute left-0 top-0 w-[300px] origin-top-left" style={{ transform: "scale(0.5333)" }}>
               {projectPreviews[project.slug]}

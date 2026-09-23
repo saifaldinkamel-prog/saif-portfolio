@@ -10,7 +10,7 @@ import { Magnetic } from "@/components/fx/Magnetic";
 import { LocalTime } from "@/components/fx/LocalTime";
 import { useIntroDone } from "@/components/transition/Intro";
 
-const ROLES = ["Frontend Developer", "Mobile App Developer", "React Native Developer", "UI Engineer"] as const;
+const ROLES = ["Software Engineer", "Frontend Developer", "Mobile App Developer", "React Native Developer"] as const;
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
@@ -69,7 +69,7 @@ export function HeroScene() {
           Hello, I&rsquo;m
         </motion.p>
 
-        <h1 className="mt-4 font-display font-semibold leading-[0.88] tracking-[-0.05em] text-text-primary text-[clamp(3.6rem,15vw,13.5rem)]">
+        <h1 className="mt-4 font-display font-semibold leading-[0.88] tracking-[-0.05em] text-text-primary text-[clamp(3.6rem,18vw,13.5rem)]">
           <SplitReveal text="Saifaldin" by="char" trigger="mount" play={introDone} delay={0.1} interactive className="block" as="span" />
           <SplitReveal
             text="Kamel"
@@ -98,8 +98,8 @@ export function HeroScene() {
         className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
       >
         <p className="max-w-sm font-sans text-body text-text-secondary">
-          I design and build interfaces that feel as good as they work — for the web and for
-          mobile.
+          I build software that feels as good as it works — from the interface down to the logic
+          underneath, on the web and on mobile.
         </p>
 
         <div className="flex items-center gap-6">

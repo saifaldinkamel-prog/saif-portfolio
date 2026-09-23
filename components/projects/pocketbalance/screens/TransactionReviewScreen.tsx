@@ -5,19 +5,20 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, Clock } from "lucide-react";
 import { pb } from "../pbTheme";
 import { pendingTransaction, reviewCategories } from "../data/review";
-import { TransactionReviewCard } from "../components/TransactionReviewCard";
+import { TransactionReviewCard, type ReviewResult } from "../components/TransactionReviewCard";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-type Outcome = { kind: "saved"; category: string } | { kind: "later" } | null;
+type Outcome = ({ kind: "saved" } & ReviewResult) | { kind: "later" } | null;
 
 /**
- * The real app's categorize popup on its own. Save or Later sends it
- * away and leaves a small result in its place, with a way to bring the
- * popup back.
+ * The real app's categorize popup on its own. Finishing it (or tapping
+ * Later) sends it away and leaves a small result in its place, with a
+ * way to bring the popup back.
  */
 export function TransactionReviewScreen({ playIntro }: { playIntro: boolean }) {
   const [outcome, setOutcome] = useState<Outcome>(null);
+  const { merchant, amount } = pendingTransaction;
 
   return (
     <div
@@ -39,7 +40,7 @@ export function TransactionReviewScreen({ playIntro }: { playIntro: boolean }) {
             <TransactionReviewCard
               transaction={pendingTransaction}
               categories={reviewCategories}
-              onSave={(category) => setOutcome({ kind: "saved", category })}
+              onDone={(result) => setOutcome({ kind: "saved", ...result })}
               onLater={() => setOutcome({ kind: "later" })}
             />
           </motion.div>
@@ -70,9 +71,11 @@ export function TransactionReviewScreen({ playIntro }: { playIntro: boolean }) {
               {outcome.kind === "saved" ? `Saved as ${outcome.category}` : "Left for later"}
             </p>
             <p className="mt-1 font-sans text-[11px] leading-relaxed" style={{ color: pb.textTertiary }}>
-              {outcome.kind === "saved"
-                ? `${pendingTransaction.merchant} · ${pendingTransaction.amount.toLocaleString("en-US")} EGP. The next ${pendingTransaction.merchant} purchase gets this category automatically.`
-                : `${pendingTransaction.merchant} stays in your review list until you choose a category.`}
+              {outcome.kind === "later"
+                ? `${merchant} stays in your review list until you choose a category.`
+                : outcome.remember
+                  ? `Every future ${merchant} purchase goes straight to ${outcome.category}.`
+                  : `${merchant} · ${amount.toLocaleString("en-US")} EGP. We'll ask again next time.`}
             </p>
             <button
               type="button"
@@ -80,7 +83,7 @@ export function TransactionReviewScreen({ playIntro }: { playIntro: boolean }) {
               className="mt-4 rounded-lg border px-4 py-2 font-sans text-[11px] font-bold"
               style={{ borderColor: "rgba(255,255,255,0.3)", color: pb.textPrimary }}
             >
-              {outcome.kind === "saved" ? "Review again" : "Categorize now"}
+              {outcome.kind === "saved" ? "Try it again" : "Categorize now"}
             </button>
           </motion.div>
         )}

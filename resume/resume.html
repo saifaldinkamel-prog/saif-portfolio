@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Saifaldin Kamel — Résumé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #111418;
+    --body: #2f3640;
+    --muted: #66707c;
+    --line: #e3e6ea;
+    --accent: #0e8a57;
+  }
+  html, body { background: #fff; }
+  body {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 13mm 17mm 11mm;
+    font-family: "Geist", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 9.6pt;
+    line-height: 1.5;
+    color: var(--body);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 12mm; padding-bottom: 5mm; border-bottom: 1.5pt solid var(--ink); }
+  h1 { font-size: 25pt; line-height: 1; letter-spacing: -0.03em; font-weight: 700; color: var(--ink); }
+  .role { margin-top: 2.2mm; font-size: 11pt; font-weight: 500; color: var(--accent); }
+  .contact { text-align: right; font-size: 8.8pt; line-height: 1.65; color: var(--body); white-space: nowrap; }
+  .contact a { border-bottom: 0.5pt solid var(--line); }
+
+  section { margin-top: 5.5mm; }
+  h2 {
+    display: flex; align-items: center; gap: 3mm;
+    font-family: "Geist Mono", "Consolas", monospace;
+    font-size: 8pt; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 2.6mm;
+  }
+  h2::after { content: ""; flex: 1; height: 0.6pt; background: var(--line); }
+
+  .summary { font-size: 10pt; color: var(--body); }
+
+  .entry + .entry { margin-top: 4.6mm; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 6mm; }
+  .entry-title { font-size: 11pt; font-weight: 600; color: var(--ink); }
+  .entry-title span { font-weight: 400; color: var(--muted); }
+  .entry-date { font-size: 8.8pt; color: var(--muted); white-space: nowrap; }
+  .entry-meta { margin-top: 0.6mm; font-size: 8.8pt; color: var(--muted); }
+  ul { margin-top: 1.8mm; padding-left: 4.2mm; }
+  li { margin-top: 1mm; padding-left: 0.6mm; }
+  li::marker { color: var(--accent); }
+  strong { font-weight: 600; color: var(--ink); }
+
+  .skills { display: grid; grid-template-columns: 30mm 1fr; row-gap: 1.6mm; column-gap: 4mm; }
+  .skills dt { font-weight: 600; color: var(--ink); }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Saifaldin Kamel</h1>
+      <p class="role">Software Engineer · Frontend &amp; Mobile</p>
+    </div>
+    <div class="contact">
+      6th of October, Giza, Egypt<br />
+      <a href="mailto:saifaldinkamel@gmail.com">saifaldinkamel@gmail.com</a><br />
+      <a href="https://github.com/saifaldinkamel-prog">github.com/saifaldinkamel-prog</a><br />
+      <a href="https://www.linkedin.com/in/saifaldin-kamel-149087322/">linkedin.com/in/saifaldin-kamel-149087322</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Profile</h2>
+    <p class="summary">
+      Final-year Software Engineering student who builds complete, working products — from the interface
+      down to the data and logic underneath. Currently building <strong>PocketBalance</strong>, an Android
+      finance app that turns bank SMS messages into a live balance, with an AI copilot for reports and
+      questions. Looking for an internship or junior software engineering role, with a strength in frontend
+      and mobile development.
+    </p>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+
+    <div class="entry">
+      <div class="entry-head">
+        <p class="entry-title">PocketBalance <span>— personal finance Android app</span></p>
+        <p class="entry-date">2026 – Present · In development</p>
+      </div>
+      <p class="entry-meta">React Native (Expo) · TypeScript · SQLite · Supabase · Reanimated</p>
+      <ul>
+        <li>Built an Android app that reads bank <strong>SMS messages</strong> and turns them into clean transactions and a running balance — no bank API and no manual entry.</li>
+        <li>Designed a strict SMS parser that identifies the bank and account behind each message, with duplicate protection, balance reconciliation, and recovery of missed messages.</li>
+        <li>Added <strong>merchant learning</strong>: transactions from known merchants are categorized automatically, while unclear ones are sent to a quick review instead of being guessed.</li>
+        <li>Building an <strong>AI copilot</strong> that generates monthly financial reports with written insights, exports them to PDF and CSV, answers spending questions in plain language, and adds cash expenses from typed text.</li>
+        <li>Local-first data in SQLite with a biometric app lock, cloud backup and device recovery, and full English / Arabic support.</li>
+        <li>Backed by <strong>189 automated test files</strong> covering the parser, ledger, and recovery flows.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <p class="entry-title">Personal portfolio website <span>— interactive showcase</span></p>
+        <p class="entry-date">2026</p>
+      </div>
+      <p class="entry-meta">Next.js · TypeScript · Tailwind CSS · Motion</p>
+      <ul>
+        <li>Designed and built a multi-page portfolio with cinematic page transitions, a cursor-reactive canvas background, and scroll-driven animation.</li>
+        <li>Recreated PocketBalance’s screens as a working web replica — visitors can send it simulated bank messages and categorize transactions in the browser.</li>
+        <li>Tuned for mobile performance and accessibility, including reduced-motion support.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <p class="entry-title">Modern Sciences and Arts University (MSA)</p>
+        <p class="entry-date">Expected June 2027</p>
+      </div>
+      <p class="entry-meta">B.Sc. Computer Science, major in Software Engineering · GPA 3.5 / 4.0 · 6th of October, Giza</p>
+      <ul>
+        <li>Built several course projects in <strong>Python, Java, and C++</strong>, and several websites with <strong>HTML, CSS, and JavaScript</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <dl class="skills">
+      <dt>Programming</dt>
+      <dd>TypeScript, JavaScript, Python, Java, C++, HTML, CSS · basic C#</dd>
+      <dt>Frontend &amp; mobile</dt>
+      <dd>React, React Native (Expo), Next.js, Tailwind CSS, Motion / Reanimated, Android development</dd>
+      <dt>Data &amp; backend</dt>
+      <dd>SQLite, Supabase</dd>
+      <dt>Practices</dt>
+      <dd>Automated testing, Git &amp; GitHub, UI/UX and interaction design</dd>
+      <dt>Languages</dt>
+      <dd>Arabic (native), English (professional working proficiency)</dd>
+    </dl>
+  </section>
+</body>
+</html>

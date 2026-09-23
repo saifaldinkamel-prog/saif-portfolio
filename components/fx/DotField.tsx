@@ -32,12 +32,17 @@ export function DotField({ className = "" }: { className?: string }) {
     let frame = 0;
     let running = false;
     let lastMove = -Infinity;
+    let lastDraw = 0;
     const light = { x: 0, y: 0, tx: 0, ty: 0 };
+    // Touch devices are usually phones: draw at ~30fps and lower pixel
+    // density there. The light drifts slowly, so the difference is invisible.
+    const lowPower = window.matchMedia("(pointer: coarse)").matches;
+    const frameInterval = lowPower ? 1000 / 30 : 0;
 
     function resize() {
       if (!canvas || !ctx) return;
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2);
       width = rect.width;
       height = rect.height;
       canvas.width = Math.round(width * dpr);
@@ -95,7 +100,10 @@ export function DotField({ className = "" }: { className?: string }) {
     }
 
     function loop(time: number) {
-      draw(time);
+      if (time - lastDraw >= frameInterval) {
+        lastDraw = time;
+        draw(time);
+      }
       frame = requestAnimationFrame(loop);
     }
 

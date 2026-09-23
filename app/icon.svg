@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="glow" cx="0.68" cy="0.7" r="0.6">
+      <stop offset="0" stop-color="#3dd68c" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#3dd68c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#06070a"/>
+  <rect width="64" height="64" rx="14" fill="url(#glow)"/>
+  <text x="11" y="47" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="40" font-weight="800" fill="#f2f4f7">S</text>
+  <circle cx="45" cy="42" r="6" fill="#3dd68c"/>
+</svg>

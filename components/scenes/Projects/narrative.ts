@@ -6,7 +6,7 @@
 export const narrative = [
   {
     headline: "Every transaction, tracked automatically.",
-    body: "SMS-based bank parsing turns raw bank messages into a running balance — no manual entry, no bank API.",
+    body: "Your bank already texts you every payment. PocketBalance reads those texts and keeps your balance up to date — you never type a thing.",
   },
   {
     headline: "Spending patterns, explained.",
