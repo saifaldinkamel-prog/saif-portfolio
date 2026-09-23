@@ -62,7 +62,7 @@ export function HeroScene() {
       </motion.div>
 
       <motion.div
-        style={{ y: nameY, opacity: fade }}
+        style={{ y: nameY, opacity: fade, willChange: "transform, opacity" }}
         className="relative z-10 flex flex-1 flex-col justify-center py-16"
       >
         <motion.p {...enter(0.15)} className="font-mono text-mono-label uppercase text-signal-text">

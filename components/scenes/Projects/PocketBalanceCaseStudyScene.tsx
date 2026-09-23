@@ -180,11 +180,11 @@ function CaseHero() {
           transition={{ duration: 1.2, ease: EASE, delay: 0.45 }}
           className="relative mx-auto w-full max-w-[280px]"
         >
-          <motion.div style={{ y: phoneY, rotate: phoneRotate }}>
+          <motion.div style={{ y: phoneY, rotate: phoneRotate, willChange: "transform" }}>
             <div
               aria-hidden
-              className="absolute left-1/2 top-1/2 -z-10 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ backgroundColor: ACCENT, filter: "blur(110px)", opacity: 0.4 }}
+              className="absolute left-1/2 top-1/2 -z-10 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ background: `radial-gradient(closest-side, ${ACCENT}, transparent)`, opacity: 0.45 }}
             />
             <PocketBalanceStill playIntro />
           </motion.div>
@@ -454,9 +454,9 @@ function Walkthrough() {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={screenIndex}
-                    initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -14 }}
                     transition={{ duration: duration.scene, ease: ease.in }}
                   >
                     <h3 className="font-display text-[1.45rem] font-semibold leading-[1.1] tracking-[-0.03em] text-text-primary lg:text-[clamp(1.9rem,3.6vw,3rem)] lg:leading-[1.05]">

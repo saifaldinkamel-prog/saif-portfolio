@@ -55,7 +55,7 @@ export function VelocityMarquee({
 
   return (
     <div ref={containerRef} className={`flex flex-nowrap overflow-hidden whitespace-nowrap ${className}`}>
-      <motion.div className="flex flex-nowrap whitespace-nowrap" style={{ x }}>
+      <motion.div className="flex flex-nowrap whitespace-nowrap" style={{ x, willChange: "transform" }}>
         {[0, 1, 2, 3].map((copy) => (
           <span key={copy} aria-hidden={copy > 0} className="block shrink-0">
             {children}

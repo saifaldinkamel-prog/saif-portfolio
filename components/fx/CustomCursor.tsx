@@ -72,7 +72,7 @@ export function CustomCursor() {
             borderColor: label ? "rgba(61,214,140,0)" : "rgba(242,244,247,0.55)",
           }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          style={{ borderWidth: 1, borderStyle: "solid", mixBlendMode: label ? "normal" : "difference" }}
+          style={{ borderWidth: 1, borderStyle: "solid", willChange: "transform" }}
         >
           <AnimatePresence>
             {label && (

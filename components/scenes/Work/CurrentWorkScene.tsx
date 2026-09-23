@@ -127,11 +127,11 @@ export function CurrentWorkScene() {
         </div>
 
         <div ref={phoneRef} className="relative mx-auto w-full max-w-[280px]">
-          <motion.div style={{ y: phoneY, rotate: phoneRotate }}>
+          <motion.div style={{ y: phoneY, rotate: phoneRotate, willChange: "transform" }}>
             <div
               aria-hidden
-              className="absolute left-1/2 top-1/2 -z-10 h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ backgroundColor: project.accent, filter: "blur(110px)", opacity: 0.4 }}
+              className="absolute left-1/2 top-1/2 -z-10 h-[680px] w-[680px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ background: `radial-gradient(closest-side, ${project.accent}, transparent)`, opacity: 0.45 }}
             />
             <TransitionLink href={href} label={project.name} data-cursor="Open" aria-label={`Open ${project.name}`} className="block">
               <PocketBalanceStill />

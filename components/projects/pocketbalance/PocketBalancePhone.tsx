@@ -167,9 +167,8 @@ export function PocketBalancePhone({
     <div className="relative flex w-full max-w-[320px] flex-col items-center gap-5">
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{ filter: "blur(90px)" }}
-        animate={{ backgroundColor: SCREEN_GLOW[screenIndex], opacity: 0.35 }}
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        animate={{ background: `radial-gradient(closest-side, ${SCREEN_GLOW[screenIndex]}, rgba(0,0,0,0))`, opacity: 0.4 }}
         transition={{ duration: 0.7, ease: ease.in }}
       />
 

@@ -37,7 +37,7 @@ export function InsightsScreen({ playIntro }: { playIntro: boolean }) {
         <div
           aria-hidden
           className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full"
-          style={{ background: "rgba(236,72,153,0.2)", filter: "blur(18px)" }}
+          style={{ background: "radial-gradient(closest-side, rgba(236,72,153,0.24), transparent)" }}
         />
 
         <div className="relative flex items-center gap-2">

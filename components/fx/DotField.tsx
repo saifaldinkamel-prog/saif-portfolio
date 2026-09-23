@@ -42,7 +42,7 @@ export function DotField({ className = "" }: { className?: string }) {
     function resize() {
       if (!canvas || !ctx) return;
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = rect.width;
       height = rect.height;
       canvas.width = Math.round(width * dpr);

@@ -42,12 +42,12 @@ export function BalanceCard({
       <div
         aria-hidden
         className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full"
-        style={{ background: "rgba(196,181,253,0.25)", filter: "blur(20px)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(196,181,253,0.28), transparent)" }}
       />
       <div
         aria-hidden
         className="pointer-events-none absolute -bottom-10 -left-6 h-28 w-28 rounded-full"
-        style={{ background: "rgba(139,92,246,0.25)", filter: "blur(20px)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(139,92,246,0.28), transparent)" }}
       />
 
       <div className="relative flex items-center justify-between gap-2">

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { motion, useTransform } from "motion/react";
 import { useScrollProgress } from "./ScrollProgress";
-import { useFinePointer } from "@/components/fx/useFinePointer";
 import {
   useSceneGlows,
   useSceneGlowVersion,
@@ -80,7 +79,6 @@ function buildGlowBackground(
  */
 export function GlowField() {
   const progress = useScrollProgress();
-  const finePointer = useFinePointer();
   const glows = useSceneGlows();
   const version = useSceneGlowVersion();
 
@@ -96,14 +94,15 @@ export function GlowField() {
     progress.set(progress.get());
   }, [version, progress]);
 
-  // The gradients already fade to transparent; the extra blur only
-  // softens them further, and repainting a full-screen blur on every
-  // scroll frame is the most expensive thing on the page for phones.
+  // The glow repaints on every scroll frame, so keep each repaint cheap:
+  // no blur filter (the gradients already fade out), and paint it at a
+  // quarter of the size then scale it up — a soft gradient looks the
+  // same enlarged, at ~1/16 of the pixels to redraw.
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute inset-0"
-      style={{ background, filter: finePointer ? "blur(var(--glow-blur))" : undefined }}
+      className="pointer-events-none absolute left-0 top-0 h-1/4 w-1/4"
+      style={{ background, scale: 4, originX: 0, originY: 0, willChange: "transform" }}
     />
   );
 }

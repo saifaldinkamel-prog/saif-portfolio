@@ -65,7 +65,7 @@ function StackPanel({
   return (
     <div className="sticky flex h-[70vh] min-h-[420px] items-start" style={{ top: `calc(14vh + ${index * 28}px)` }}>
       <motion.div
-        style={{ scale, opacity: dim, transformOrigin: "top center", borderColor: "var(--border-hairline)" }}
+        style={{ scale, opacity: dim, transformOrigin: "top center", borderColor: "var(--border-hairline)", willChange: "transform" }}
         className="relative h-[56vh] min-h-[360px] w-full overflow-hidden rounded-3xl border p-8 md:p-14"
       >
         <div
@@ -78,8 +78,8 @@ function StackPanel({
         />
         <div
           aria-hidden
-          className="absolute -right-24 -top-24 h-72 w-72 rounded-full"
-          style={{ background: "var(--cool-glow)", filter: "blur(100px)", opacity: 0.35 }}
+          className="absolute -right-48 -top-48 h-[34rem] w-[34rem] rounded-full"
+          style={{ background: "radial-gradient(closest-side, var(--cool-glow), transparent)", opacity: 0.4 }}
         />
         <div className="relative flex h-full flex-col justify-between">
           <div className="flex items-start justify-between gap-6">
