@@ -22,11 +22,7 @@ const geistMono = Geist_Mono({
   weight: ["400", "500", "600"],
 });
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://saifkamel.vercel.app";
 
 const DESCRIPTION =
   "Portfolio of Saifaldin Kamel, a software engineer in Giza, Egypt with a strength in frontend and mobile — currently building PocketBalance, a real Android finance app.";
